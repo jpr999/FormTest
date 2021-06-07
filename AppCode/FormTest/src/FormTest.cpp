@@ -25,24 +25,8 @@ struct FCGI_Info
 static std::string strHtml = "<!DOCTYPE html>"
                              "<tml lang=\"en\">"
                              "<head>"
-                             "    <meta charset=\"UTF-8\">"
-                             "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">"
-                             "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=0.9\">"
-                             "    <title>Document</title>"
-                             "<style>"
-                             "    h1 {text-align: center;}"
-                             "    p {text-align: center;}"
-                             "    div {text-align: center;}"
-                             "    div > q {text-align: left;}"
-
-                             "</style>"
-
                              "</head>"
                              "<body>"
-                             "    <p style=\"color:purple\">你好世界</p>"
-                             "    <div>Lorem ipsum dolor sit amet, consectetur</div>"
-                             "    <div id=\"q\">Query String: %s</div>"
-                             "<img src=\"https://loremflickr.com/800/600/Chiswick\"/>"
                              "</body>"
                              "</html>";
 
