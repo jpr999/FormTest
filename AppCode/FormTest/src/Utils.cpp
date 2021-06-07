@@ -33,4 +33,3 @@ int utf8_strlen(const std::string& str)
     }
     return q;
 }
-
