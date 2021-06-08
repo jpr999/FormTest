@@ -27,6 +27,7 @@ static std::string strHtml = "<!DOCTYPE html>"
                              "<head>"
                              "</head>"
                              "<body>"
+                             "<p style=\"color:purple\">好世界</p>"
                              "</body>"
                              "</html>";
 
