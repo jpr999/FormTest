@@ -2,6 +2,7 @@
 #include <fcgiapp.h>
 #include <fmt/printf.h>
 #include <map>
+#include <mutex>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -16,6 +17,7 @@ const char* const sockpath = ":5862";
 void* start_fcgi_worker(void* arg);
 bool gen_data(size_t i);
 
+std::mutex g_mutex;
 struct FCGI_Info
 {
     int fcgi_fd;
@@ -23,16 +25,20 @@ struct FCGI_Info
 };
 
 static std::string strHtml = "<!DOCTYPE html>"
-                             "<tml lang=\"en\">"
-                             "<head>"
-                             "</head>"
-                             "<body>"
-                             "<p style=\"color:purple\">好世界</p>"
-                             "</body>"
+                             "<html lang=\"en\">"
+                             "  <head>"
+                             "    <meta charset=\"utf-8\">"
+                             "    <title>Title of the document</title>"
+                             "   </head>"
+                             "  <body>"
+                             "    <p style=\"color:red;\">好世界</p>"
+                             "    <p style=\"color:purple;\">Help %s</p>"
+                             "  </body>"
                              "</html>";
 
 int main(void)
 {
+    std::locale::global(std::locale(""));
     int fcgifd = FCGX_OpenSocket(sockpath, 128);
 
     chmod(sockpath, 0777);
@@ -48,7 +54,7 @@ int main(void)
     std::thread threads[n_threads];
     FCGI_Info info[n_threads];
 
-    for(unsigned int i = 0; i <= n_threads; i++)
+    for(unsigned int i = 0; i < n_threads; i++)
     {
         info[i].fcgi_fd = fcgifd;
         info[i].count = i;
@@ -68,6 +74,7 @@ int main(void)
 
 void* start_fcgi_worker(void* arg)
 {
+
     struct FCGI_Info* info = (struct FCGI_Info*)arg;
     FCGX_Init();
     FCGX_Request request;
@@ -91,8 +98,8 @@ void* start_fcgi_worker(void* arg)
 
         gen_data(2000);
 
-        std::string str = "Content-type: text/html;\r\n\r\n";
-        FCGX_PutStr(str.c_str(), utf8_strlen(str), request.out);
+        std::string str = "Content-type: text/html;  charset=utf-8;\r\n\r\n";
+        FCGX_PutStr(str.c_str(), str.length(), request.out);
         FCGX_PutStr(strVal.c_str(), utf8_strlen(strVal), request.out);
         FCGX_Finish_r(&request);
     }
@@ -100,10 +107,11 @@ void* start_fcgi_worker(void* arg)
 
 bool gen_data(size_t i)
 {
-    static std::atomic<int> ic(0);
+    std::lock_guard<std::mutex> guard(g_mutex);
 
-    int ii = ++ic;
-    t_exec a(fmt::sprintf("\n\ncount:%d  time to process map:{}\n", ii));
+    static int ic(0);
+    t_exec a(fmt::sprintf("\n\ncount:%d  time to process map:{}\n", ic));
+    ic++;
 
     std::map<std::string, std::string> m;
     std::vector<std::string> v;
@@ -111,13 +119,12 @@ bool gen_data(size_t i)
     {
         std::string key(generate(50));
         m.insert(std::pair(key, generate(3000)));
-        v.push_back(key);
+        v.emplace_back(key);
     }
 
-    const std::map<std::string, std::string>& cm = m;
     for(const auto& s : v)
     {
-        const auto p = cm.find(s);
+        const auto p = m.find(s);
         if(p != m.end())
         {
             if(p->first.length() != 50)

@@ -1,11 +1,16 @@
 #include <string>
+#include <utf8cpp/utf8.h>
 
 int utf8_strlen(const std::string& str)
 {
-    int c;
-    int i;
-    int ix;
-    int q;
+    int c = 0;
+    int i = 0;
+    int ix = 0;
+    int q = 0;
+    int q1 = 0;
+
+    q1 = utf8::distance(str.begin(), str.end());
+
 
     for(q = 0, i = 0, ix = str.length(); i < ix; i++, q++)
     {
@@ -30,6 +35,6 @@ int utf8_strlen(const std::string& str)
         {
             return 0; //invalid utf8
         }
-    }
+    } 
     return q;
 }
