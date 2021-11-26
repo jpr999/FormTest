@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 #include <thread>
 
-#include "include/inc.h"
+#include "include/stringgenlib.h"
 #include "include/utils.h"
 
 const char* const sockpath = ":5862";

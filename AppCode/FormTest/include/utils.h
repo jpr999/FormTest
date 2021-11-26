@@ -22,5 +22,3 @@ private:
     std::string m_str;
 };
 
-
-int utf8_strlen(const std::string& str);
