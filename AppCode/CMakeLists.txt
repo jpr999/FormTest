@@ -4,3 +4,4 @@ project(FormTest VERSION 0.1.0)
 
 add_subdirectory(StringGenLib)
 add_subdirectory(FormTest)
+add_subdirectory(StringGenTest)

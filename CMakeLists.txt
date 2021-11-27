@@ -12,7 +12,6 @@ if( NOT CMAKE_BUILD_TYPE )
    set( CMAKE_BUILD_TYPE Debug ... FORCE )
 endif() 
 
-include(CTest)
 enable_testing()
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
