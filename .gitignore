@@ -3,6 +3,7 @@ Output
 WebSite/logs
 WebSite/pid
 testdata
+!vscode/settings.json
 
 
 
